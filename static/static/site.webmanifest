@@ -1,0 +1,21 @@
+{
+  "name": "WizeAI",
+  "short_name": "WizeAI",
+  "icons": [
+    {
+      "src": "/static/wizeai.png",
+      "sizes": "500x500",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/static/wizeai.png",
+      "sizes": "500x500",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone"
+}

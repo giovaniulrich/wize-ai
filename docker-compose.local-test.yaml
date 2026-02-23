@@ -1,0 +1,15 @@
+services:
+  wize-ai-local-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wize-ai-local-test
+    ports:
+      - "18080:8080"
+    environment:
+      - WEBUI_SECRET_KEY=local-test-secret-key
+      - ENABLE_OLLAMA_API=false
+      - CORS_ALLOW_ORIGIN=http://localhost:18080
+    volumes:
+      - ./backend/data:/app/backend/data
+    restart: "no"
