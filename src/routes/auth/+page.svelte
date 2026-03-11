@@ -115,12 +115,32 @@
 	};
 
 	const canCreateUserAccount = () => {
-		return Boolean(!($config?.onboarding ?? false));
+		return canCreatePasswordAccount() || canCreateOAuthAccount();
+	};
+
+	const canCreatePasswordAccount = () => {
+		return Boolean(
+			!($config?.onboarding ?? false) &&
+				($config?.features?.enable_signup ?? false) &&
+				($config?.features?.enable_login_form ?? false)
+		);
+	};
+
+	const canCreateOAuthAccount = () => {
+		return Boolean(
+			!($config?.onboarding ?? false) &&
+				($config?.features?.enable_oauth_signup ?? false) &&
+				Object.keys($config?.oauth?.providers ?? {}).length > 0
+		);
+	};
+
+	const isCreateAccountFlow = () => {
+		return showCreateAccountOptions || mode === 'signup';
 	};
 
 	const openCreateAccountOptions = () => {
-		showCreateAccountOptions = true;
-		mode = 'signup';
+		showCreateAccountOptions = canCreateOAuthAccount();
+		mode = canCreatePasswordAccount() ? 'signup' : 'signin';
 	};
 
 	const resetToSignIn = () => {
@@ -129,7 +149,7 @@
 	};
 
 	const getOAuthActionLabel = (provider: string) => {
-		return mode === 'signup'
+		return isCreateAccountFlow()
 			? $i18n.t('Create account with {{provider}}', { provider })
 			: $i18n.t('Continue with {{provider}}', { provider });
 	};
@@ -212,8 +232,12 @@
 	bind:show={onboarding}
 	getStartedHandler={() => {
 		onboarding = false;
-		showCreateAccountOptions = true;
-		mode = $config?.features.enable_ldap ? 'ldap' : 'signup';
+		showCreateAccountOptions = canCreateOAuthAccount();
+		mode = canCreatePasswordAccount()
+			? 'signup'
+			: $config?.features.enable_ldap
+				? 'ldap'
+				: 'signin';
 	}}
 />
 
@@ -453,7 +477,7 @@
 							</form>
 
 							{#if Object.keys($config?.oauth?.providers ?? {}).length > 0}
-								{#if mode === 'signup' && showCreateAccountOptions}
+								{#if isCreateAccountFlow() && showCreateAccountOptions}
 									<div class="mt-4 text-sm text-center text-gray-200">
 										{$i18n.t('Create your account with one of the options below.')}
 									</div>
