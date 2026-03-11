@@ -1929,7 +1929,9 @@ async def get_app_config(request: Request):
             "enable_ldap": app.state.config.ENABLE_LDAP,
             "enable_api_keys": app.state.config.ENABLE_API_KEYS,
             "enable_signup": app.state.config.ENABLE_SIGNUP,
-            "enable_oauth_signup": ENABLE_OAUTH_SIGNUP,
+            "enable_oauth_signup": bool(
+                ENABLE_OAUTH_SIGNUP or app.state.config.ENABLE_SIGNUP
+            ),
             "enable_login_form": app.state.config.ENABLE_LOGIN_FORM,
             "enable_websocket": ENABLE_WEBSOCKET_SUPPORT,
             "enable_version_update_check": ENABLE_VERSION_UPDATE_CHECK,

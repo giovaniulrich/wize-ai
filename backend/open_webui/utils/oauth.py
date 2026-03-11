@@ -1558,8 +1558,14 @@ class OAuthManager:
                             )
                             log.debug(f"Updated profile picture for user {user.email}")
             else:
+                # OAuth signup should follow the effective app signup policy unless it is explicitly enabled.
+                oauth_signup_enabled = bool(
+                    auth_manager_config.ENABLE_OAUTH_SIGNUP
+                    or request.app.state.config.ENABLE_SIGNUP
+                )
+
                 # If the user does not exist, check if signups are enabled
-                if auth_manager_config.ENABLE_OAUTH_SIGNUP:
+                if oauth_signup_enabled:
                     # Check if an existing user with the same email already exists
                     existing_user = Users.get_user_by_email(email, db=db)
                     if existing_user:
