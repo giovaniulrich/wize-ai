@@ -1,3 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="47" height="44" viewBox="0 0 47 44">
-  <image href="/static/favicon.png" width="47" height="44"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <rect x="8" y="8" width="112" height="112" rx="22" fill="#12cfd4"/>
+  <rect x="8" y="8" width="112" height="56" rx="22" fill="#34ecee" opacity="0.27"/>
+  <rect x="23" y="23" width="82" height="82" rx="16" fill="#112c3f" fill-opacity="0.92"/>
+  <path d="M64 30 L47 38 V59 C47 74 58 82 64 87 C70 82 81 74 81 59 V38 L64 30 Z" fill="none" stroke="#51fbf6" stroke-width="4.5" stroke-linejoin="round"/>
+  <path d="M55 58 L62 65 L73 51" fill="none" stroke="#51fbf6" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

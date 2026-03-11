@@ -41,6 +41,7 @@
 	let confirmPassword = '';
 
 	let ldapUsername = '';
+	let showCreateAccountOptions = false;
 
 	const setSessionUser = async (sessionUser, redirectPath: string | null = null) => {
 		if (sessionUser) {
@@ -115,6 +116,22 @@
 
 	const canCreateUserAccount = () => {
 		return Boolean(!($config?.onboarding ?? false));
+	};
+
+	const openCreateAccountOptions = () => {
+		showCreateAccountOptions = true;
+		mode = 'signup';
+	};
+
+	const resetToSignIn = () => {
+		showCreateAccountOptions = false;
+		mode = 'signin';
+	};
+
+	const getOAuthActionLabel = (provider: string) => {
+		return mode === 'signup'
+			? $i18n.t('Create account with {{provider}}', { provider })
+			: $i18n.t('Continue with {{provider}}', { provider });
 	};
 
 	const oauthCallbackHandler = async () => {
@@ -195,6 +212,7 @@
 	bind:show={onboarding}
 	getStartedHandler={() => {
 		onboarding = false;
+		showCreateAccountOptions = true;
 		mode = $config?.features.enable_ldap ? 'ldap' : 'signup';
 	}}
 />
@@ -385,7 +403,7 @@
 													class="mt-2 bg-transparent border border-gray-400/40 hover:border-gray-300/70 hover:bg-white/5 transition w-full rounded-full font-medium text-sm py-2.5"
 													type="button"
 													on:click={() => {
-														mode = 'signup';
+														openCreateAccountOptions();
 													}}
 												>
 													{$i18n.t('Create new account')}
@@ -408,7 +426,7 @@
 													class="mt-2 bg-transparent border border-gray-400/40 hover:border-gray-300/70 hover:bg-white/5 transition w-full rounded-full font-medium text-sm py-2.5"
 													type="button"
 													on:click={() => {
-														mode = 'signup';
+														openCreateAccountOptions();
 													}}
 												>
 													{$i18n.t('Create new account')}
@@ -422,7 +440,7 @@
 														class=" font-medium underline"
 														type="button"
 														on:click={() => {
-															mode = 'signin';
+															resetToSignIn();
 														}}
 													>
 														{$i18n.t('Sign in')}
@@ -435,6 +453,11 @@
 							</form>
 
 							{#if Object.keys($config?.oauth?.providers ?? {}).length > 0}
+								{#if mode === 'signup' && showCreateAccountOptions}
+									<div class="mt-4 text-sm text-center text-gray-200">
+										{$i18n.t('Create your account with one of the options below.')}
+									</div>
+								{/if}
 								<div class="inline-flex items-center justify-center w-full">
 									<hr class="w-32 h-px my-4 border-0 dark:bg-gray-100/10 bg-gray-700/10" />
 									{#if $config?.features.enable_login_form || $config?.features.enable_ldap || form}
@@ -473,7 +496,7 @@
 													d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
 												/><path fill="none" d="M0 0h48v48H0z" />
 											</svg>
-											<span>{$i18n.t('Continue with {{provider}}', { provider: 'Google' })}</span>
+											<span>{getOAuthActionLabel('Google')}</span>
 										</button>
 									{/if}
 									{#if $config?.oauth?.providers?.microsoft}
@@ -502,8 +525,7 @@
 													fill="#ffb900"
 												/>
 											</svg>
-											<span>{$i18n.t('Continue with {{provider}}', { provider: 'Microsoft' })}</span
-											>
+											<span>{getOAuthActionLabel('Microsoft')}</span>
 										</button>
 									{/if}
 									{#if $config?.oauth?.providers?.github}
@@ -523,7 +545,7 @@
 													d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.92 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57C20.565 21.795 24 17.31 24 12c0-6.63-5.37-12-12-12z"
 												/>
 											</svg>
-											<span>{$i18n.t('Continue with {{provider}}', { provider: 'GitHub' })}</span>
+											<span>{getOAuthActionLabel('GitHub')}</span>
 										</button>
 									{/if}
 									{#if $config?.oauth?.providers?.oidc}
